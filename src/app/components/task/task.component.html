@@ -1,0 +1,63 @@
+<div class="new-task">
+  <div class="title mb-4">
+    <h2>{{ (editMode) ? 'Editar' : 'Agregar nueva'}} tarea</h2>
+    <hr>
+  </div>
+  <div class="form mt-4">
+    <form>
+
+      <div class="form-group">
+        <label for="taskName">Nombre de la tarea</label>
+        <input [(ngModel)]="task.title" name='title'
+          type="text" class="form-control" id="taskName" placeholder="Nombre de la tarea">
+      </div>
+
+      <div class="form-group">
+        <label for="taskDate">Fecha de vencimiento</label>
+        <div class="d-flex justify-content-between w-50">
+          <div class="date d-flex w-50 mr-4">
+            <input [(ngModel)]="task.expiration" name='expiration' readonly
+            class='form-control' matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+          <div class="time w-50 ml-4">
+            <div class="d-flex">
+              <input class='form-control' [(ngModel)]="task.expirationHour" name='expirationHour'
+                [ngxTimepicker]="toggleTimepicker" [disableClick]="true" readonly>
+              <ngx-material-timepicker-toggle [for]="toggleTimepicker"></ngx-material-timepicker-toggle>
+              <ngx-material-timepicker #toggleTimepicker></ngx-material-timepicker>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inputState">Proridad</label>
+        <select [(ngModel)]="task.priority" name='priority'
+          id="inputState" class="form-control">
+          <option value=''>Seleccionar prioridad</option>
+          <option value='normal'>Normal</option>
+          <option value='urgente' >Urgente</option>
+        </select>
+      </div>
+
+      <div class="response mt-4 mb-4" *ngIf='error'>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Error:</strong> {{ error }}
+        </div>
+      </div>
+
+      <button (click)='newTask()' *ngIf='!editMode'
+        type="submit" class="btn btn-primary pl-4 pr-4 mt-2">
+        Crear tarea
+      </button>
+
+      <button (click)='editTask()' *ngIf='editMode'
+        type="submit" class="btn btn-primary pl-4 pr-4 mt-2">
+        Editar tarea
+      </button>
+    </form>
+  </div>
+</div>

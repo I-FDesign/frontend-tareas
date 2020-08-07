@@ -1,0 +1,65 @@
+<div class="jumbotron">
+  <h1 class="display-4">Mis tareas</h1>
+  <p class="lead">Aqui podras ver tus tareas listadas, con su respectiva fecha y prioridad</p>
+  <hr class="my-4">
+  <p>Puedes agregar una nueva en cualquier momento!</p>
+  <a class="btn btn-primary btn-lg" routerLink='/task/new' role="button">Nueva tarea</a>
+</div>
+
+<div class="alerts mt-4 mb-4" *ngIf='tasksToNotify.length > 0'>
+  <div *ngFor='let alert of tasksToNotify'
+    [ngClass]="{'alert-danger': alert.status == 'expired', 'alert-warning': alert.status == 'next-to'}"
+    class="alert alert-dismissible fade show" role="alert">
+    <strong>{{ (alert.status == 'expired') ? 'Tarea vencida!' : 'Tarea por vencer'  }}</strong>
+    La tarea "{{ alert.task.title }}"
+    {{
+      (alert.status == 'expired')
+        ? 'esta vencida!'
+        : 'esta por vencer!, vence a las: ' + alert.task.expirationHour
+    }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+
+<div class="tasks">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Titulo</th>
+          <th scope="col">Vencimiento</th>
+          <th scope="col">Prioridad</th>
+          <th scope="col">Accion</th>
+        </tr>
+      </thead>
+      <tbody *ngIf='!loading'>
+        <tr *ngFor='let task of tasks; let i = index'
+          [ngClass]="{'table-warning': task.priority === 'normal', 'table-danger': task.priority === 'urgente'}">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ task.title }}</td>
+          <td>{{ (task.expiration * 1000) | date:'dd-MM-y' }} a las {{ task.expirationHour }}</td>
+          <td>{{ task.priority | uppercase }}</td>
+          <td>
+            <div class="d-flex">
+              <button [routerLink]="['/task', 'edit', task.id]"
+                class="btn btn-outline-success p-2 mr-2"
+                style='padding-bottom: 2px !important;'>
+                <i class="material-icons">create</i>
+              </button>
+              <button (click)='deleteTask(task.id)' class="btn btn-outline-danger p-2 ml-2"
+                style='padding-bottom: 2px !important;'>
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-2 w-100 d-flex justify-content-center" *ngIf='loading'>
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
